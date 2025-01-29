@@ -1,21 +1,10 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import notes from "./routes/books.js";
+import books from "./routes/books.js";
 
 mongoose.connect('mongodb://127.0.0.1:27017/prg6');
 
 const app = express();
-
-app.use((req, res, next) => {
-    const acceptHeader = req.headers.accept;
-    console.log(`Client accepts: ${acceptHeader}`);
-
-    if (acceptHeader.includes('application/json')) {
-        next();
-    } else {
-        return res.status(406).send('Illegal format');
-    }
-})
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*')
@@ -23,10 +12,30 @@ app.use((req, res, next) => {
     next();
 })
 
+// app.use((req, res, next) => {
+//     const acceptHeader = req.headers.accept;
+//     console.log(`Client accepts: ${acceptHeader}`);
+//
+//     if (acceptHeader.includes('application/json')) {
+//         next();
+//     } else {
+//         return res.status(406).send('Illegal format');
+//     }
+// })
+
+app.use((req, res, next) => {
+
+    if (req.method !== 'OPTIONS' && req.headers.accept !== 'application/json') {
+        return res.status(406).json({error: 'Requests are only accepted with Accept of json'});
+    }
+
+    next();
+})
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-app.use('/books', notes)
+app.use('/books', books)
 
 
 app.listen(process.env.EXPRESS_PORT, () => {
