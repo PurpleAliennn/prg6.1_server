@@ -61,7 +61,7 @@ router.get('/:id', async (req, res) => {
         const books = await Book.findById({_id:bookId})
         // console.log(books === null);
         if(books === null){
-            res.status(404).json({error: "Note does not exist"})
+            res.status(404).json({error: "Book does not exist"})
             return;
         }
         res.json(books);

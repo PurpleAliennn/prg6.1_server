@@ -12,21 +12,10 @@ app.use((req, res, next) => {
     next();
 })
 
-// app.use((req, res, next) => {
-//     const acceptHeader = req.headers.accept;
-//     console.log(`Client accepts: ${acceptHeader}`);
-//
-//     if (acceptHeader.includes('application/json')) {
-//         next();
-//     } else {
-//         return res.status(406).send('Illegal format');
-//     }
-// })
-
 app.use((req, res, next) => {
 
     if (req.method !== 'OPTIONS' && req.headers.accept !== 'application/json') {
-        return res.status(406).json({error: 'Requests are only accepted with Accept of json'});
+        return res.status(406).json({error: 'Illegal format: Requests are only accepted with Accept of json'});
     }
 
     next();
